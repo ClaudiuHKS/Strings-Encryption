@@ -4,6 +4,10 @@
 #include < string >
 #include < vector >
 #include < random >
+#include < limits >
+#include < numbers >
+#include < array >
+#include < bitset >
 
 static int SE_GENERATE_RANDOM_NUMBER ( int SE_MIN_NUMBER = 1 , int SE_MAX_NUMBER = 127 , bool SE_NO_REPEAT_RANDOM_NUMBERS = false ) noexcept
 {
