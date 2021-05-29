@@ -140,6 +140,16 @@ public:
 #define XorString           XS
 #define XorCString          XCS
 
+#define SE_UNI( MB )        ( :: toUnicode ( XCS ( MB ) ) )
+#define SE_UNICODE( MB )    ( :: toUnicode ( XCS ( MB ) ) )
+#define SE_WCHAR( MB )      ( :: toUnicode ( XCS ( MB ) ) )
+#define SE_WIDECHAR( MB )   ( :: toUnicode ( XCS ( MB ) ) )
+
+#define SE_UNI_C( MB )      ( :: toUnicode ( XCS ( MB ) ) . c_str ( ) )
+#define SE_UNICODE_C( MB )  ( :: toUnicode ( XCS ( MB ) ) . c_str ( ) )
+#define SE_WCHAR_C( MB )    ( :: toUnicode ( XCS ( MB ) ) . c_str ( ) )
+#define SE_WIDECHAR_C( MB ) ( :: toUnicode ( XCS ( MB ) ) . c_str ( ) )
+
 #define SE_ZERO             ( ( int ) ( :: std :: atof ( XCS ( "0.00000" ) ) ) )
 #define SE_ONE              ( ( int ) ( :: std :: atof ( XCS ( "1.00000" ) ) ) )
 #define SE_TWO              ( ( int ) ( :: std :: atof ( XCS ( "2.00000" ) ) ) )
