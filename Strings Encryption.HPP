@@ -9,33 +9,33 @@
 #include < array >
 #include < bitset >
 
-extern char SE_RANDOM_KEY , SE_RANDOM_BUFFER [ 2048 ] ;
+extern char SE_RANDOM_KEY, SE_RANDOM_BUFFER [ 2048 ];
 
 constexpr int SE_TIME_DATE_SEED = \
-                                        ( \
-                                            ( \
-                                                __TIME__ [ 0 ]  - '0' + \
-                                                __TIME__ [ 1 ]  - '0' + \
-                                                __TIME__ [ 3 ]  - '0' + \
-                                                __TIME__ [ 4 ]  - '0' + \
-                                                __TIME__ [ 6 ]  - '0' + \
-                                                __TIME__ [ 7 ]  - '0' \
-                                            ) \
-                                            + \
-                                            ( \
-                                                __DATE__ [ 0 ]  - '0' + \
-                                                __DATE__ [ 1 ]  - '0' + \
-                                                __DATE__ [ 2 ]  - '0' + \
-                                                __DATE__ [ 4 ]  - '0' + \
-                                                __DATE__ [ 5 ]  - '0' + \
-                                                __DATE__ [ 7 ]  - '0' + \
-                                                __DATE__ [ 8 ]  - '0' + \
-                                                __DATE__ [ 9 ]  - '0' + \
-                                                __DATE__ [ 10 ] - '0' \
-                                            ) \
-                                        ) \
-                                        * \
-                                        ( ( ( __TIME__ [ 6 ] - '0' ) < 2 ) ? ( 2 ) : ( __TIME__ [ 6 ] - '0' ) ) ;
+( \
+  ( \
+    __TIME__ [ 0 ] - '0' + \
+    __TIME__ [ 1 ] - '0' + \
+    __TIME__ [ 3 ] - '0' + \
+    __TIME__ [ 4 ] - '0' + \
+    __TIME__ [ 6 ] - '0' + \
+    __TIME__ [ 7 ] - '0' \
+    ) \
+  + \
+  ( \
+    __DATE__ [ 0 ] - '0' + \
+    __DATE__ [ 1 ] - '0' + \
+    __DATE__ [ 2 ] - '0' + \
+    __DATE__ [ 4 ] - '0' + \
+    __DATE__ [ 5 ] - '0' + \
+    __DATE__ [ 7 ] - '0' + \
+    __DATE__ [ 8 ] - '0' + \
+    __DATE__ [ 9 ] - '0' + \
+    __DATE__ [ 10 ] - '0' \
+    ) \
+  ) \
+    * \
+    ( ( ( __TIME__ [ 6 ] - '0' ) < 2 ) ? ( 2 ) : ( __TIME__ [ 6 ] - '0' ) );
 
 template < int SE_VAL > struct SE_ENSURE_COMPILE_TIME
 {
@@ -43,47 +43,47 @@ template < int SE_VAL > struct SE_ENSURE_COMPILE_TIME
     enum : int
     {
 
-        SE_VALUE = :: SE_VAL ,
+        SE_VALUE = ::SE_VAL,
 
-    } ;
+    };
 
-} ;
+};
 
-template < int ... SE_PACK > struct SE_INDEX_LIST ;
+template < int ... SE_PACK > struct SE_INDEX_LIST;
 
-template < typename SE_INDEX_LIST , int SE_RIGHT > struct SE_APPEND ;
+template < typename SE_INDEX_LIST, int SE_RIGHT > struct SE_APPEND;
 
-template < int ... SE_LEFT , int SE_RIGHT > struct SE_APPEND < :: SE_INDEX_LIST < SE_LEFT ... > , SE_RIGHT >
+template < int ... SE_LEFT, int SE_RIGHT > struct SE_APPEND < ::SE_INDEX_LIST < SE_LEFT ... >, SE_RIGHT >
 {
 
-    typedef :: SE_INDEX_LIST < SE_LEFT ... , SE_RIGHT > SE_RESULT ;
+    typedef ::SE_INDEX_LIST < SE_LEFT ..., SE_RIGHT > SE_RESULT;
 
-} ;
+};
 
 template < int SE_N > struct SE_CONSTRUCT_INDEX_LIST
 {
 
-    typedef typename :: SE_APPEND < typename :: SE_CONSTRUCT_INDEX_LIST < SE_N - 1 > :: SE_RESULT , SE_N - 1 > :: SE_RESULT SE_RESULT ;
+    typedef typename ::SE_APPEND < typename ::SE_CONSTRUCT_INDEX_LIST < SE_N - 1 > ::SE_RESULT, SE_N - 1 > ::SE_RESULT SE_RESULT;
 
-} ;
+};
 
 template < > struct SE_CONSTRUCT_INDEX_LIST < 0 >
 {
 
-    typedef :: SE_INDEX_LIST < > SE_RESULT ;
+    typedef ::SE_INDEX_LIST < > SE_RESULT;
 
-} ;
+};
 
-template < typename SE_INDEX_LIST > class SE_XOR_STRING ;
+template < typename SE_INDEX_LIST > class SE_XOR_STRING;
 
-constexpr __forceinline char SE_ENCRYPT_CHARACTER ( char SE_CHARACTER , int SE_WHERE ) noexcept
+constexpr __forceinline char SE_ENCRYPT_CHARACTER ( char SE_CHARACTER, int SE_WHERE ) noexcept
 {
 
-    return SE_CHARACTER ^ SE_RANDOM_BUFFER [ SE_WHERE ] ;
+    return SE_CHARACTER ^ SE_RANDOM_BUFFER [ SE_WHERE ];
 
-} ;
+};
 
-template < int ... SE_INDEX > class SE_XOR_STRING < :: SE_INDEX_LIST < SE_INDEX ... > >
+template < int ... SE_INDEX > class SE_XOR_STRING < ::SE_INDEX_LIST < SE_INDEX ... > >
 {
 
 public:
@@ -93,46 +93,46 @@ public:
 
 
 
-    } ;
+    };
 
     constexpr __forceinline SE_XOR_STRING ( const char * const SE_STRING ) noexcept : \
         SE_DATA
-        {
+    {
 
-            :: SE_ENCRYPT_CHARACTER ( SE_STRING [ SE_INDEX ] , SE_INDEX ) ...
+        ::SE_ENCRYPT_CHARACTER ( SE_STRING [ SE_INDEX ] , SE_INDEX ) ...
 
-        }
+    }
     {
 
 
 
-    } ;
+    };
 
-    constexpr __forceinline :: std :: string SE_DECRYPT ( void ) noexcept
+    constexpr __forceinline ::std::string SE_DECRYPT ( void ) noexcept
     {
 
         for
-        (
+            (
 
-            int SE_ITERATOR = { } ; \
-            SE_ITERATOR < sizeof ... ( SE_INDEX ) ; \
-            SE_ITERATOR ++
+                int SE_ITERATOR = { }; \
+                SE_ITERATOR < sizeof ... ( SE_INDEX ); \
+                SE_ITERATOR++
 
-        )
+                )
 
         {
 
-            SE_DATA [ SE_ITERATOR ] = SE_DATA [ SE_ITERATOR ] ^ SE_RANDOM_BUFFER [ SE_ITERATOR ] ;
+            SE_DATA [ SE_ITERATOR ] = SE_DATA [ SE_ITERATOR ] ^ SE_RANDOM_BUFFER [ SE_ITERATOR ];
 
-        } ;
+        };
 
-        SE_DATA [ ( sizeof ... ( SE_INDEX ) ) ] = { } ;
+        SE_DATA [ ( sizeof ... ( SE_INDEX ) ) ] = { };
 
-        return ( ( :: std :: string ) ( SE_DATA ) ) ;
+        return ( ( ::std::string ) ( SE_DATA ) );
 
-    } ;
+    };
 
-} ;
+};
 
 #define XS( SE_STRING )     ( :: std :: string ( :: SE_XOR_STRING < :: SE_CONSTRUCT_INDEX_LIST < sizeof ( SE_STRING ) - 1 > :: SE_RESULT > ( SE_STRING ) . SE_DECRYPT ( ) ) )
 #define XCS( SE_STRING )  ( ( :: std :: string ( :: SE_XOR_STRING < :: SE_CONSTRUCT_INDEX_LIST < sizeof ( SE_STRING ) - 1 > :: SE_RESULT > ( SE_STRING ) . SE_DECRYPT ( ) ) ) . c_str ( ) )
