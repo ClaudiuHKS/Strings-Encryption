@@ -3,17 +3,8 @@
 
 #include "Requirements.HPP"
 
-extern char SE_RND_BFR[2048];
-
-#ifndef SE_NO_SEC
-constexpr int SE_SED = ((__TIME__[0] - '0' + __TIME__[1] - '0' + __TIME__[3] - '0' + __TIME__[4] - '0' + __TIME__[6] - '0' + __TIME__[7] - '0') +
-    (__DATE__[0] - '0' + __DATE__[1] - '0' + __DATE__[2] - '0' + __DATE__[4] - '0' + __DATE__[5] - '0' + __DATE__[7] - '0' +
-        __DATE__[8] - '0' + __DATE__[9] - '0' + __DATE__[10] - '0')) * (((__TIME__[6] - '0') < 2) ? (2) : (__TIME__[6] - '0'));
-#else
-constexpr int SE_SED = ((__TIME__[0] - '0' + __TIME__[1] - '0' + __TIME__[3] - '0' + __TIME__[4] - '0' + __TIME__[3] - '0' + __TIME__[4] - '0') +
-    (__DATE__[0] - '0' + __DATE__[1] - '0' + __DATE__[2] - '0' + __DATE__[4] - '0' + __DATE__[5] - '0' + __DATE__[7] - '0' +
-        __DATE__[8] - '0' + __DATE__[9] - '0' + __DATE__[10] - '0')) * (((__TIME__[3] - '0') < 2) ? (2) : (__TIME__[3] - '0'));
-#endif
+constexpr inline int SE_SED = ((int)((__TIME__[0] - 48 + __TIME__[1] - 48 + __TIME__[3] - 48 + __TIME__[4] - 48 + __TIME__[6] - 48 + __TIME__[7] - 48) +
+    (__DATE__[0] - 48 + __DATE__[1] - 48 + __DATE__[2] - 48 + __DATE__[4] - 48 + __DATE__[5] - 48 + __DATE__[7] - 48 + __DATE__[8] - 48 + __DATE__[9] - 48 + __DATE__[10] - 48)));
 
 template < int ... > struct SE_IDX_LST;
 template < typename SE_IDX_LST, int SE_RGT > struct SE_APP;
@@ -22,15 +13,15 @@ template < int SE_NUM > struct SE_CST_IDX_LST { typedef typename ::SE_APP < type
 template < > struct SE_CST_IDX_LST < 0 > { typedef ::SE_IDX_LST < > SE_RES; };
 template < typename SE_IDX_LST > struct SE_XOR_STR;
 
-constexpr char SE_ENC_CHR(char SE_CHR, int SE_WHR) noexcept { return SE_CHR ^ SE_RND_BFR[SE_WHR]; }
+constexpr __forceinline char SE_ENC(char SE_CHR, int SE_WHR) noexcept { return ((char)((((int)(SE_CHR)) ^ ((SE_SED + SE_WHR) & 127)) & 127)); }
 
 template < int ... SE_IDX > struct SE_XOR_STR < ::SE_IDX_LST < SE_IDX ... > > {
-    char SE_BFR[sizeof ... (SE_IDX) + SE_SED]{ };
-    constexpr __forceinline SE_XOR_STR(const char* SE_STR) noexcept : SE_BFR{ ::SE_ENC_CHR(SE_STR[SE_IDX], SE_IDX) ..., } { }
-    constexpr ::std::string SE_DEC() noexcept {
-        for (int SE_ITR = { }; SE_ITR < sizeof ... (SE_IDX); SE_ITR++) SE_BFR[SE_ITR] = SE_BFR[SE_ITR] ^ SE_RND_BFR[SE_ITR];
+    mutable char SE_BFR[sizeof ... (SE_IDX) + SE_SED]{ };
+    constexpr __forceinline SE_XOR_STR(const char* SE_STR) noexcept : SE_BFR{ ::SE_ENC(SE_STR[SE_IDX], SE_IDX) ..., } { }
+    constexpr __forceinline ::std::string SE_DEC() noexcept {
+        for (SE_ITR = { }; SE_ITR < sizeof ... (SE_IDX); SE_ITR++) SE_BFR[SE_ITR] = ((char)((((int)(SE_BFR[SE_ITR])) ^ ((SE_SED + SE_ITR) & 127)) & 127));
         SE_BFR[(sizeof ... (SE_IDX))] = { }; return SE_BFR;
-    }
+    } static inline int SE_ITR{ };
 };
 
 #define XS(SE_STR) (::SE_XOR_STR < ::SE_CST_IDX_LST < sizeof (SE_STR) - 1 > ::SE_RES > (SE_STR).SE_DEC())
