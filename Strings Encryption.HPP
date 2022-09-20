@@ -4,7 +4,7 @@
 #include "Requirements.HPP"
 #include "SeRnd.HPP"
 
-template < int ... > struct SE_IDX_LST; template < typename SE_IDX_LST, int SE_RGT > struct SE_APP;
+template < int ... > struct SE_IDX_LST; template < typename, int > struct SE_APP;
 template < int ... SE_LFT, int SE_RGT > struct SE_APP < ::SE_IDX_LST < SE_LFT ... >, SE_RGT > { typedef ::SE_IDX_LST < SE_LFT ..., SE_RGT > SE_RES; };
 template < int SE_NUM > struct SE_CST_IDX_LST { typedef typename ::SE_APP < typename ::SE_CST_IDX_LST < SE_NUM - 1 > ::SE_RES, SE_NUM - 1 > ::SE_RES SE_RES; };
 template < > struct SE_CST_IDX_LST < 0 > { typedef ::SE_IDX_LST < > SE_RES; }; template < typename SE_IDX_LST > struct SE_XOR_STR;
