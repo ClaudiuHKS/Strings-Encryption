@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Requirements.HPP"
-#include "SeRnd.HPP"
+#include "SeRnd.HPP" // #include SE_RND_HPP /* ".vcxproj" <PreprocessorDefinitions>SE_RND_HPP="$(SERND)";%(PreprocessorDefinitions)</PreprocessorDefinitions> */
 
 template < int ... > struct SE_IDX_LST; template < typename, int > struct SE_APP;
 template < int ... SE_LFT, int SE_RGT > struct SE_APP < ::SE_IDX_LST < SE_LFT ... >, SE_RGT > { typedef ::SE_IDX_LST < SE_LFT ..., SE_RGT > SE_RES; };
@@ -18,8 +18,13 @@ template < int ... SE_IDX > struct SE_XOR_STR < ::SE_IDX_LST < SE_IDX ... > > {
     } static inline int SE_ITR{ };
 };
 
-#define XS(SE_STR) (::SE_XOR_STR < ::SE_CST_IDX_LST < sizeof (SE_STR) - 1 > ::SE_RES > (SE_STR).SE_DEC())
-#define XCS(SE_STR) ((::SE_XOR_STR < ::SE_CST_IDX_LST < sizeof (SE_STR) - 1 > ::SE_RES > (SE_STR).SE_DEC()).c_str())
+#ifndef NO_STRENC
+#   define XS(SE_STR) (::SE_XOR_STR < ::SE_CST_IDX_LST < sizeof (SE_STR) - 1 > ::SE_RES > (SE_STR).SE_DEC())
+#   define XCS(SE_STR) ((::SE_XOR_STR < ::SE_CST_IDX_LST < sizeof (SE_STR) - 1 > ::SE_RES > (SE_STR).SE_DEC()).c_str())
+#else
+#   define XS(SE_STR) (SE_STR)
+#   define XCS(SE_STR) (SE_STR)
+#endif
 
 #define XWS(SE_STR) (::toUnicode(XCS(SE_STR)))
 #define XCWS(SE_STR) (::toUnicode(XCS(SE_STR)).c_str())
